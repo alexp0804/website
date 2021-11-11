@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>alexander</title>
+        <link rel="stylesheet" href="../main.css">
+
+        <script src="https://cdn.jsdelivr.net/npm/p5@1.2.0/lib/p5.js"></script>
+        <script src="../js/pathfinding.js"></script>
+    </head>
+
+    <body>
+        <div id="head-container">
+            <div id="head-content">
+
+                <a id="my-name" href="../index.html">
+                    <span>
+                        <p> $ alex peterson </p>
+                    </span>
+                </a>
+
+                <span id="links">
+                    <a>Resume</a>
+                    <a href="../project-page.html">Projects</a>
+                </span>
+
+            </div>
+        </div>
+
+        <div id="body-container">
+            <div id="body-content">
+                <h>A* Pathfinder</h>
+                <p>
+                    I never formally learned A* in any of my classes, but it's 
+                    very similar to something I did learn: breadth-first-search, a basic graph traversal algorithm.
+                    The major difference between A* and BFS is that the A* <i>knows</i> where the end goal is.
+                </p>
+                <p>
+                    As it searches each cells neighbors, it prioritizes the neighbor that has the shortest distance to the goal.
+                    This makes it much more efficient as it is informed about which cell is the best option to take.
+                </p>
+                <p>
+                    This implementation allows you to pick the start and end node and draw any walls that act as obstructions.
+                </p>
+                <p>
+                    Have fun messing about and seeing the algorithm work!
+                </p>
+                <p>
+                    The source code can be found on my GitHub <a href=""><u>here.</u></a> 
+                </p> 
+                <hr>
+                <div id="display-canvas"></div>
+                <div id="button-container"></div>
+            </div>
+        </div>
+
+    </body>
+
+</html>
