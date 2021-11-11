@@ -185,7 +185,7 @@ canvas {
     justify-content: center;
 
 }
-button {
+button, select {
     margin: 10px;
     width: 70px;
     height: 40px;
@@ -196,4 +196,8 @@ button {
     border: 2px solid;
     border-color: var(--header-color);
     border-radius: 5px;
+}
+
+select {
+    width: 90px;
 }

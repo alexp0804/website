@@ -166,7 +166,8 @@ function placeWall()
     let [x, y] = getMouseCellXY();
 
     // Only place wall if its within bounds, and not a start or end node. 
-    // Also prevents from changing the wall that was just changed, to avoid flickering.
+    // Also prevents from changing the wall that was 
+    // just changed, to avoid flickering.
     if (inBounds(x, y) && ![prevWall, startNode, endNode].includes(nodes[x][y]))
     {
         nodes[x][y].wall = true;
