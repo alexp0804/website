@@ -5,7 +5,7 @@
         <link rel="stylesheet" href="../main.css">
 
         <script src="https://cdn.jsdelivr.net/npm/p5@1.2.0/lib/p5.js"></script>
-        <script src="../js/sudoku.js"></script>
+        <script src="../js/maze_generator.js"></script>
     </head>
 
     <body>
@@ -28,19 +28,18 @@
 
         <div id="body-container">
             <div id="body-content">
-                <h>Sudoku Solver</h>
+                <h>Maze Generator</h>
                 <p>
-                    This piece of code solves a collection of sudoku puzzles (although it is capable of solving any solvable sudoku).
+                    This is one of my favorite uses of a backtracking algorithm because you can <i>literally</i> see it doing the backtracking. The end result is a nice maze!
                 </p>
                 <p>
-                    The algorithm is a simple backtracking algorithm. It places a number from 1 through 9 and tests if that number is valid within the current context of the board.
-                    If it's valid, it moves onto the next location and does the same thing again. If it ever runs into an invalid state, it backtracks and tries a new set of numbers.
+                    It works by picking a random square that it can go to while pushing the square it's leaving onto a stack. Once it runs into a dead end, it pops the last square off the stack until it runs out of options again.
                 </p>
                 <p>
-                    Note that the algorithm is much faster than what is being displayed here. I slowed it down for visualization purposes. Most boards (unless specifically designed to slow this algorithm down) can be solved in under a second.
+                    I like to think of it as a randomized depth-first-search, which it technically is.
                 </p>
                 <p>
-                    The source code can be found on my GitHub <a href="https://github.com/alexp0804/site_2.0/blob/main/js/sudoku.js"><u>here.</u></a> 
+                    The source code can be found on my GitHub <a href=""><u>here.</u></a> 
                 </p> 
 
                 <hr>
