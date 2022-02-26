@@ -163,6 +163,12 @@ body {
     color: var(--text-color);
 }
 
+.project img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 hr {
     width: 98%;
 }
