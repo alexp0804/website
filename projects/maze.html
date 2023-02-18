@@ -1,51 +1,50 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>alexander</title>
-        <link rel="stylesheet" href="../main.css">
 
-        <script src="https://cdn.jsdelivr.net/npm/p5@1.2.0/lib/p5.js"></script>
-        <script src="../js/maze_generator.js"></script>
-    </head>
+<head>
+    <title>alexander</title>
+    <link rel="stylesheet" href="../main.css">
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.2.0/lib/p5.js"></script>
+    <script src="../js/maze_generator.js"></script>
+</head>
 
-    <body>
-        <div id="head-container">
-            <div id="head-content">
+<body>
+    <div id="head-container">
+        <div id="head-content">
 
-                <a id="my-name" href="../index.html">
-                    <span>
-                        <p> $ alex peterson </p>
-                    </span>
-                </a>
-
-                <span id="links">
-                    <a>Resume</a>
-                    <a href="../project-page.html">Projects</a>
+            <a href="../index.html">
+                <span id="my-name">
+                    <p> $ alexp </p>
                 </span>
+            </a>
 
-            </div>
+            <span id="links">
+                <a href="https://github.com/alexp0804/">My GitHub</a>
+            </span>
+
         </div>
+    </div>
 
-        <div id="body-container">
-            <div id="body-content">
-                <h>Maze Generator</h>
+    <div id="body-container">
+        <div id="body-content">
+            <h>Maze Generator</h>
+            <div class="project-page-description">
                 <p>
-                    This is one of my favorite uses of a backtracking algorithm because you can <i>literally</i> see it doing the backtracking. The end result is a nice maze!
+                    This is an implementation of a depth-first traversal through a grid to generate a maze.
                 </p>
                 <p>
-                    It works by picking a random square that it can go to while pushing the square it's leaving onto a stack. Once it runs into a dead end, it pops the last square off the stack until it runs out of options again.
+                    Traversing from one cell to another removes the wall between them.
                 </p>
                 <p>
-                    I like to think of it as a randomized depth-first-search, which it technically is.
+                    The source code can be found on my GitHub <a
+                        href="https://github.com/alexp0804/site_2.0/blob/main/js/maze_generator.js"><u>here</u></a>.
                 </p>
-                <p>
-                    The source code can be found on my GitHub <a href="https://github.com/alexp0804/site_2.0/blob/main/js/maze_generator.js"><u>here.</u></a> 
-                </p> 
-
-                <hr>
-                <div id="display-canvas"></div>
-                <div id="button-container"></div>
             </div>
+            <hr>
+            <div id="display-canvas"></div>
+            <div id="button-container"></div>
         </div>
-    </body>
+    </div>
+</body>
+
 </html>

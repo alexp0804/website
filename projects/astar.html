@@ -1,56 +1,53 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>alexander</title>
-        <link rel="stylesheet" href="../main.css">
 
-        <script src="https://cdn.jsdelivr.net/npm/p5@1.2.0/lib/p5.js"></script>
-        <script src="../js/pathfinding.js"></script>
-    </head>
+<head>
+    <title>alexander</title>
+    <link rel="stylesheet" href="../main.css">
 
-    <body>
-        <div id="head-container">
-            <div id="head-content">
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.2.0/lib/p5.js"></script>
+    <script src="../js/pathfinding.js"></script>
+</head>
 
-                <a id="my-name" href="../index.html">
-                    <span>
-                        <p> $ alex peterson </p>
-                    </span>
-                </a>
+<body>
+    <div id="head-container">
+        <div id="head-content">
 
-                <span id="links">
-                    <a>Resume</a>
-                    <a href="../project-page.html">Projects</a>
+            <a href="../index.html">
+                <span id="my-name">
+                    <p> $ alexp </p>
                 </span>
+            </a>
 
-            </div>
+            <span id="links">
+                <a href="https://github.com/alexp0804/">My GitHub</a>
+            </span>
+
         </div>
+    </div>
 
-        <div id="body-container">
-            <div id="body-content">
-                <h>A* Pathfinder</h>
+    <div id="body-container">
+        <div id="body-content">
+            <h>A* Pathfinder</h>
+            <div class="project-page-description">
                 <p>
-                    I never formally learned A* in any of my classes, but it's 
-                    very similar to something I did learn: breadth-first-search, a basic graph traversal algorithm.
-                    The major difference between A* and BFS is that the A* <i>knows</i> where the end goal is.
+                    This is an implementation of an A* pathfinding algorithm.
                 </p>
                 <p>
-                    As it searches each cells neighbors, it prioritizes the neighbor that has the shortest distance to the goal.
-                    This makes it much more efficient as it is informed about which cell is the best option to take.
+                    Click once to place the start node and once again to place the end node.
                 </p>
                 <p>
-                    This implementation allows you to pick the start and end node and draw any walls that act as obstructions.
+                    Then draw obstructions, if you'd like, and hit Start when you're ready.
                 </p>
                 <p>
-                    Have fun messing about and seeing the algorithm work!
-                </p>
-                <p>
-                    The source code can be found on my GitHub <a href="https://github.com/alexp0804/site_2.0/blob/main/js/pathfinding.js"><u>here.</u></a> 
+                    The source code can be found on my GitHub <a href="https://github.com/alexp0804/site_2.0/blob/main/js/pathfinding.js"><u>here</u></a>.
                 </p> 
-                <hr>
-                <div id="display-canvas"></div>
-                <div id="button-container"></div>
             </div>
+            <hr>
+            <div id="display-canvas"></div>
+            <div id="button-container"></div>
         </div>
-    </body>
+    </div>
+</body>
+
 </html>

@@ -1,62 +1,50 @@
 <!DOCTYPE html>
 <html>
 
-    <head>
-        <title>alexander</title>
-        <link rel="stylesheet" href="../main.css">
-    </head>
+<head>
+    <title>alexander</title>
+    <link rel="stylesheet" href="../main.css">
+</head>
 
-    <body>
-        <div id="head-container">
-            <div id="head-content">
-
-                <a id="my-name" href="../index.html">
-                    <span>
-                        <p> $ alex peterson </p>
-                    </span>
-                </a>
-
-                <span id="links">
-                    <a>Resume</a>
-                    <a href="../project-page.html">Projects</a>
+<body>
+    <div id="head-container">
+        <div id="head-content">
+            <a href="../index.html">
+                <span id="my-name">
+                    <p> $ alexp </p>
                 </span>
+            </a>
 
+            <span id="links">
+                <a href="https://github.com/alexp0804/">My GitHub</a>
+            </span>
+        </div>
+    </div>
+
+    <div id="body-container">
+        <div id="body-content">
+            <h>CHIP-8 Emulator</h>
+            <div class="project-page-description">
+                <p>
+                    I wrote an interpreter for the CHIP-8 language, written in C using SDL for graphics and sound.
+                </p>
+                <p>
+                    It's functional enough to play many classic games such as <i>Space Invaders</i>, <i>Tetris</i>, and <i>Breakout</i>, so I considered it a success.
+                </p>
+                <p>
+                    The source code can be found on my GitHub <a href="https://github.com/alexp0804/chip8emu"><u>here</u></a>.
+                </p>
+            </div>
+            <hr>
+            <div id="images">
+                <img src="../images/tetris.png">
+                <img src="../images/spaceinvaders.png">
+                <img src="../images/connect4.png">
+                <img src="../images/brix.png">
             </div>
         </div>
+    </div>
 
-        <div id="body-container">
-            <div id="body-content">
-                <h>CHIP-8 Emulator</h>
-                <p>
-                    This was my first project that jumped into the world of emulation. Emulation is the process in which a system attempts to mimic another system as accurately as possible.
-                    It's a very deep subject because there are <i>so </i>many factors that go into making a computer a computer: you have CPU timings, instruction cycles, flags, registers, memory maps, banks and so on.
-                </p>
-                <p>
-                    The CHIP-8 technically can't be emulated because it wasn't actual hardware. It was an interpreted language that ran through a virtual machine, so the correct term would be an interpreter.
-                    However, the implementation is near enough to what an emulator does, so it often gets confused with or called an emulator.
-                </p>
-                <p>
-                    This project was a lot of fun to work on. I read through many different resources that led to me truly understand and appreciate the inner workings of computer hardware at a deeper level than before.
-                    The CHIP-8 is <i>absurdly </i>simple compared to modern computers, but that doesn't mean it isn't complicated. It handles input, sound, a couple different registers, and a few dozen op-codes, all of which you need to get the emulation working.
-                </p>
-                <p>
-                    This was also my first time using SDL for rendering, so it was a bit of a learning process to get it rendering the way I wanted it to. I'm sure there is ample room for improvement if I ever choose to use C + SDL for another project in the future!
-                </p>
-                <p>
-                    The source code can be found on my GitHub <a href="https://github.com/alexp0804/chip8emu"><u>here.</u></a> 
-                </p> 
-
-                <hr>
-
-                <div id="images">
-                    <img src="../images/tetris.png">
-                    <img src="../images/spaceinvaders.png">
-                    <img src="../images/connect4.png">
-                    <img src="../images/brix.png">
-                </div>
-            </div>
-        </div>
-
-    </body>
+</body>
 
 </html>

@@ -1,52 +1,50 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>alexander</title>
-        <link rel="stylesheet" href="../main.css">
 
-        <script src="https://cdn.jsdelivr.net/npm/p5@1.2.0/lib/p5.js"></script>
-        <script src="../js/sudoku.js"></script>
-    </head>
+<head>
+    <title>alexander</title>
+    <link rel="stylesheet" href="../main.css">
 
-    <body>
-        <div id="head-container">
-            <div id="head-content">
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.2.0/lib/p5.js"></script>
+    <script src="../js/sudoku.js"></script>
+</head>
 
-                <a id="my-name" href="../index.html">
-                    <span>
-                        <p> $ alex peterson </p>
-                    </span>
-                </a>
+<body>
+    <div id="head-container">
+        <div id="head-content">
 
-                <span id="links">
-                    <a>Resume</a>
-                    <a href="../project-page.html">Projects</a>
+            <a id="my-name" href="../index.html">
+                <span>
+                    <p> $ alexp </p>
                 </span>
+            </a>
 
-            </div>
+            <span id="links">
+                <a href="https://github.com/alexp0804/">My GitHub</a>
+            </span>
+
         </div>
+    </div>
 
-        <div id="body-container">
-            <div id="body-content">
-                <h>Sudoku Solver</h>
+    <div id="body-container">
+        <div id="body-content">
+            <h>Sudoku Solver</h>
+            <div class="project-page-description">
                 <p>
-                    This piece of code solves a collection of sudoku puzzles (although it is capable of solving any solvable sudoku).
+                    This is an implementation of a Sudoku solver using a backtracking algorithm.
                 </p>
                 <p>
-                    The algorithm is a simple backtracking algorithm. It places a number from 1 through 9 and tests if that number is valid within the current context of the board.
-                    If it's valid, it moves onto the next location and does the same thing again. If it ever runs into an invalid state, it backtracks and tries a new set of numbers.
+                    Select a puzzle to solve and press Start to begin solving.
                 </p>
                 <p>
-                    Note that the algorithm is much faster than what is being displayed here. I slowed it down for visualization purposes. Most boards (unless specifically designed to slow this algorithm down) can be solved in under a second.
-                </p>
-                <p>
-                    The source code can be found on my GitHub <a href="https://github.com/alexp0804/site_2.0/blob/main/js/sudoku.js"><u>here.</u></a> 
+                    The source code can be found on my GitHub <a href="https://github.com/alexp0804/site_2.0/blob/main/js/sudoku.js"><u>here</u></a>.
                 </p> 
-
-                <hr>
-                <div id="display-canvas"></div>
-                <div id="button-container"></div>
             </div>
+            <hr>
+            <div id="display-canvas"></div>
+            <div id="button-container"></div>
         </div>
-    </body>
+    </div>
+</body>
+
 </html>

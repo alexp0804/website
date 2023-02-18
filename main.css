@@ -1,19 +1,21 @@
 
 :root {
     --text-color: #222;
-    --secondary-text-color: #111;
     --bg-color: #fff;
     --header-color: #f9f9f9;
     --cursor-color: rgb(114, 190, 0); 
+    --shadow-color: grey;
+    --underline-color: rgba(50, 50, 50, 0.624);
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --text-color: #bbb;
-        --secondary-text-color: #aaa;
+        --text-color: #FFFFFF;
         --bg-color: #292a2d;
         --header-color: #222326; 
         --cursor-color: greenyellow;
+        --shadow-color: rgb(16, 16, 16);
+        --underline-color: rgba(255, 255, 255, 0.139);
     }
     #contact-methods img {
         filter: invert(80%);
@@ -24,7 +26,7 @@
 }
 
 * {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: monospace;
 }
 
 body {
@@ -34,12 +36,10 @@ body {
 
 #head-container {
     height: 65px;
-    display: flex;    
+    display: flex;
     justify-content: center;
-
     background-color: var(--header-color);
 }
-
 #head-content {
     width: 50%;
     max-width: 790px;
@@ -50,127 +50,145 @@ body {
     justify-content: space-between;
 
     color: var(--text-color);
-}
-
-#head-content a {
     text-decoration: none;
-    color: var(--text-color);
-}
-
-#my-name {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    font-size: larger;
+    font-size: x-large;
     font-weight: bold;
+    align-items: center;
+}
+#head-content a {
+    color: inherit;
+    text-decoration: inherit;
 }
 
-#head-content p::after {
+/* Blinking Cursor */
+#my-name p::after {
     width: 14px;
     height: 20px;
+
     margin-left: 5px;
+    vertical-align: text-top;
 
-    display: inline-block;
-    vertical-align: text-bottom;
+    color: var(--cursor-color);
+    content: '\2588';
 
-    content: "";
-
-    background: var(--cursor-color);
-
-    animation: cursor-blink 1.25s steps(2) infinite
+    animation: cursor-blink 1.0s steps(2) infinite
 }
-
 @keyframes cursor-blink {
     0% {
         opacity: 0%;
     }
 }
 
-#links {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+/* Fancy link hover highlighting */
+.Underline-link {
+  display: inline-block;
+  position: relative;
+  color: inherit;
 }
+.Underline-link::after {
+  content: '';
 
-#links a {
-    margin: 10px;
-    vertical-align: middle;
+  position: absolute;
+  width: 110%;
+  transform: scaleX(0);
+
+  height: 4px;
+  bottom: 0;
+  left: 0;
+
+  background-color: var(--underline-color);
+
+  transform-origin: bottom right;
+  transition: transform 0.25s ease-out;
+}
+.Underline-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
 }
 
 #body-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 50px;
+    margin: 0 auto;
+    margin-top: 20px;
+    max-width: 700px;
     color: var(--text-color);
-}
-
-#body-content {
-    width: 50%;
-    max-width: 710px;
-    min-width: 590px;
 }
 #body-content h {
     font-size: xx-large;
     font-weight: bolder;
 }
 #body-content a {
-    text-decoration: none;
     display: inline-block;
-    color: var(--text-color);
 }
-
 #body-content img {
-   max-width: 350px;
+    height: auto;
+    max-width: 350px;
 }
-
-#images {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-around;
-}
-
 #projects, #about-me, #contact-me {
     margin-top: 50px;
+    font-size: large;
+}
+#about-me {
+    margin-top: 0px;
+}
+
+/* Individual project section */
+.project {
+    display: flex;
+    justify-content: space-around; 
+    min-height: 218px;
+}
+.project-info {
+    margin-left: 50px;
+    width: 485px;
+    display: flex;
+    flex-direction: column;
+}
+.project-img {
+    margin: auto;
+    box-shadow: 10px 10px 5px var(--shadow-color);
+}
+.project p1 {
+    display: block;
+    padding-top: 34px;
+    font-size: x-large;
+    font-style: italic;
+    font-weight: bold;
+}
+.project p2 {
+    display: block;
+    padding-top: 10px;
+    font-size: larger;
+    line-height: 1.5;
+    color: var(--text-color);
+}
+.project a {
+    display: block;
+    padding: 15px 0px 15px 3px;
     text-decoration: none;
     color: var(--text-color);
 }
-
-#contact-methods {
-    padding: 10px;
+.project img {
+    width: 175px;
+    height: 175px;
+}
+.project-page-description {
+    font-size: larger;
 }
 
+#contact-me {
+    padding-bottom: 50px;
+}
 #contact-methods a {
     margin: 0px 10px 0px 0px;
 }
 
-.project p1 {
-    display: block;
-    padding-top: 34px;
-    font-size:x-large;
-}
-.project p2 {
-    display:block;
-    padding-top: 10px;
-    line-height: 1.5;
-    color: var(--secondary-text-color);
-}
-.project a {
-    display: block;
-    padding: 29px 0px 20px 0px;
-    text-decoration: none;
-    color: var(--text-color);
-}
-
-.project img {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-
 hr {
     width: 98%;
+}
+
+#images {
+    display: flex;
+    flex-wrap: wrap;
 }
 
 #display-canvas {
@@ -180,7 +198,8 @@ hr {
 }
 
 canvas {
-    width: 90% !important;
+    width: 700;
+    /* width: 90% !important; */
     height: 90% !important;
     border: 2px solid;
     border-color: var(--header-color);
@@ -203,7 +222,6 @@ button, select {
     border-color: var(--header-color);
     border-radius: 5px;
 }
-
 select {
     width: 90px;
 }
