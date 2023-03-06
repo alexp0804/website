@@ -1,24 +1,69 @@
 
 const boardLength = 9;
 const canvasSize = 700;
-const squareSize = canvasSize / boardLength;
+const cellSize = canvasSize / boardLength;
 
-var solving = false;
-var begin = false;
+var amSolving = false;
+var isSolved = false;
+var startSolving = false;
 
 var bgColor = 255;
 var fgColor = 0;
 
-var board = [[5, 3, 4, 6, 7, 0, 9, 1, 0],
-             [0, 0, 2, 0, 9, 0, 0, 0, 0],
-             [0, 9, 0, 0, 4, 2, 0, 6, 0],
-             [8, 0, 0, 0, 6, 0, 0, 0, 3],
-             [4, 0, 0, 8, 0, 3, 0, 0, 1],
-             [7, 0, 0, 0, 2, 0, 0, 0, 6],
-             [0, 6, 0, 0, 0, 0, 2, 8, 0],
-             [0, 0, 0, 4, 1, 9, 0, 0, 5],
-             [0, 0, 0, 0, 8, 0, 0, 7, 9]];
+var boards = [
+    [[5, 3, 4, 6, 7, 0, 9, 1, 0],
+     [0, 0, 2, 0, 9, 0, 0, 0, 0],
+     [0, 9, 0, 0, 4, 2, 0, 6, 0],
+     [8, 0, 0, 0, 6, 0, 0, 0, 3],
+     [4, 0, 0, 8, 0, 3, 0, 0, 1],
+     [7, 0, 0, 0, 2, 0, 0, 0, 6],
+     [0, 6, 0, 0, 0, 0, 2, 8, 0],
+     [0, 0, 0, 4, 1, 9, 0, 0, 5],
+     [0, 0, 0, 0, 8, 0, 0, 7, 9]],
 
+    [[3, 0, 0, 8, 0, 1, 0, 0, 2],
+     [2, 0, 1, 0, 3, 0, 6, 0, 4],
+     [0, 0, 0, 2, 0, 4, 0, 0, 0],
+     [8, 0, 9, 0, 0, 0, 0, 0, 0],
+     [0, 6, 0, 0, 0, 0, 0, 0, 0],
+     [7, 0, 2, 0, 0, 0, 0, 0, 0],
+     [0, 0, 0, 5, 0, 9, 0, 0, 0],
+     [9, 0, 4, 0, 8, 0, 7, 0, 5],
+     [6, 0, 0, 1, 0, 7, 0, 0, 3]],
+
+    [[6, 0, 9, 0, 0, 4, 0, 0, 1],
+     [8, 0, 0, 0, 5, 0, 0, 0, 0],
+     [0, 3, 5, 1, 0, 9, 0, 0, 8],
+     [0, 0, 8, 0, 0, 0, 0, 0, 4],
+     [0, 5, 0, 0, 0, 0, 0, 3, 0],
+     [4, 0, 0, 0, 7, 0, 0, 5, 2],
+     [0, 0, 0, 0, 0, 1, 0, 0, 0],
+     [0, 0, 1, 0, 4, 0, 0, 0, 0],
+     [7, 6, 0, 0, 3, 0, 0, 0, 0]],
+
+    [[1, 0, 0, 0, 0, 9, 0, 0, 0],
+     [5, 6, 0, 0, 1, 7, 0, 3, 9],
+     [0, 0, 8, 6, 0, 0, 1, 0, 4],
+     [6, 0, 9, 0, 0, 0, 0, 0, 0],
+     [3, 8, 0, 0, 2, 0, 0, 7, 6],
+     [0, 0, 0, 0, 0, 0, 2, 0, 8],
+     [4, 0, 5, 0, 0, 1, 6, 0, 0],
+     [2, 1, 0, 8, 5, 0, 0, 4, 3],
+     [0, 0, 0, 3, 0, 0, 0, 0, 1]],
+
+    [[1, 0, 0, 0, 0, 0, 0, 0, 0],
+     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+     [0, 0, 0, 0, 0, 0, 0, 0, 0]],
+];
+var board = boards[0];
+
+// Gets the most up-to-date colors from the CSS, in case of dark-mode to light-mode theme change.
 function getColors()
 {
     var docGetter = getComputedStyle(document.documentElement);
@@ -27,69 +72,121 @@ function getColors()
     fgColor = docGetter.getPropertyValue('--text-color');
 }
 
-function drawSquare(x, y) 
+let drawBoard = () => { drawAllCells(); drawGridLines() };
+
+function drawGridLines()
+{
+    strokeWeight(4);
+
+    stroke(fgColor);
+    for (let i = 1; i <= 2; i++) 
+    {
+        line(cellSize * 3 * i, 0, cellSize * 3 * i, canvasSize);
+        line(0, cellSize * 3 * i, canvasSize, cellSize * 3 * i);
+    }
+
+    strokeWeight(1);
+}
+function drawAllCells()
+{
+    for (let row = 0; row < boardLength; row++)
+    {
+        for (let col = 0; col < boardLength; col++)
+        {
+            drawCellAt(row, col);
+        }
+    }
+}
+function drawCellAt(x, y) 
 {
     let value = board[y][x];
 
-    // Clear square
+    let x_corner = x * cellSize,
+        y_corner = y * cellSize,
+        x_middle = x_corner + cellSize * 0.5
+        y_middle = y_corner + cellSize * 0.5;
+
+    // Clear cell
     fill(bgColor);
     rectMode(CORNER);
-    rect(x * squareSize, y * squareSize, squareSize);
+    rect(x_corner, y_corner, cellSize);
 
-    // Draw number (if non-zero)
-    if (value == 0)
-        return;
-
+    // Draw text onto cell
     fill(fgColor);
     rectMode(CENTER);
-    text(value.toString(), x * squareSize + squareSize / 2, y * squareSize + squareSize / 2 + 2);
+    if (value != 0)
+        text(value.toString(), x_middle, y_middle + 3);
 }
 
+// Returns true if placing the key at the cell x, y would not violate any Sudoku rules.
 function isValid(x, y, key) 
 {
     // Check current row and column
     for (let i = 0; i < boardLength; i++) 
     {
-        if (i != y && board[x][i] == key) 
+        if (i != y && board[x][i] == key)
+        {
             return false;
+        }
 
         if (i != x && board[i][y] == key)
+        {
             return false;
+        }
     }
 
+    // Checks the subgrid that the given x,y falls inside.
     let subX = Math.floor(x / 3), subY = Math.floor(y / 3);
 
-    // Checks the subgrid that the given x,y falls inside.
     for (let i = subX * 3; i < subX * 3 + 3; i++) 
-        for (let j = subY * 3; j < subY * 3 + 3; j++) 
-            if (board[i][j] == key && x != i && y != j) 
+    {
+        for (let j = subY * 3; j < subY * 3 + 3; j++)
+        {
+            if (board[i][j] == key && x != i && y != j)
+            {
                 return false;
+            }
+        }
+    }
 
     return true;
 }
 
-// Finds the first empty square on the board.
-function nextSquare() 
+// Finds the first empty cell on the board.
+function nextCell() 
 {
-    for (let row = 0; row < boardLength; row++) 
+    for (let row = 0; row < boardLength; row++)
+    {
         for (let col = 0; col < boardLength; col++)
+        {
             if (board[row][col] == 0)
+            {
                 return [row, col];
+            }
+        }
+    }
 
     return false;
 }
 
-// Checks if the board is full of numbers.
+// Returns true if all cells on the board are non-zero.
 function full() 
 {
-    for (let i = 0; i < boardLength; i++) 
+    for (let i = 0; i < boardLength; i++)
+    {
         for (let j = 0; j < boardLength; j++)
+        {
             if (board[i][j] == 0)
+            {
                 return false;
+            }
+        }
+    }
 
     return true;
 }
 
+// Sleeps for the given number of milliseconds.
 function sleep(ms) 
 {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -101,103 +198,30 @@ async function solve(row, col)
     if (!isValid(row, col, board[row][col]))
         return false;
 
-    // If the board is full, it must be complete.
+    // If the board is full it is solved.
     if (full())
         return true;
 
-    // Finds next non-zero square.
-    let next = nextSquare();
-    let nextRow = next[0], nextCol = next[1];
+    let [nextRow, nextCol] = nextCell();
 
-    // Try each possibility and recursively call to the next square.
     for (let i = 1; i < 10; i++) 
     {
+        // Try this possibility.
         board[nextRow][nextCol] = i;
 
         // Artificially slow down the program to make the drawing visible.
         await sleep(0.1);
 
-        // If the recursive call ends up succeeding, then return true.
+        // We solved the board!
         if (await solve(nextRow, nextCol)) 
             return true;
 
-        // Otherwise, something failed and we need to reset the value.
+        // We didn't solve the board. Undo our change.
         board[nextRow][nextCol] = 0;
     }
 
-    solving = false;
+    // This will never happen as if the sudoku is properly formed.
     return false;
-}
-
-// Changes the global variable "board" to the given option.
-function selectPuzzle() 
-{
-    if (solving)
-        return;
-
-    // Selector values are in the form of "PUZZLE #N"
-    // This piece of code gets N and stores it in num.
-    let num = mySelect.value();
-    num = parseInt(num.substr(num.length - 1));
-
-    switch (num) 
-    {
-        case 1:
-            board = [[5, 3, 4, 6, 7, 0, 9, 1, 0],
-                     [0, 0, 2, 0, 9, 0, 0, 0, 0],
-                     [0, 9, 0, 0, 4, 2, 0, 6, 0],
-                     [8, 0, 0, 0, 6, 0, 0, 0, 3],
-                     [4, 0, 0, 8, 0, 3, 0, 0, 1],
-                     [7, 0, 0, 0, 2, 0, 0, 0, 6],
-                     [0, 6, 0, 0, 0, 0, 2, 8, 0],
-                     [0, 0, 0, 4, 1, 9, 0, 0, 5],
-                     [0, 0, 0, 0, 8, 0, 0, 7, 9]];
-            break;
-        case 2:
-            board = [[3, 0, 0, 8, 0, 1, 0, 0, 2],
-                     [2, 0, 1, 0, 3, 0, 6, 0, 4],
-                     [0, 0, 0, 2, 0, 4, 0, 0, 0],
-                     [8, 0, 9, 0, 0, 0, 0, 0, 0],
-                     [0, 6, 0, 0, 0, 0, 0, 0, 0],
-                     [7, 0, 2, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 5, 0, 9, 0, 0, 0],
-                     [9, 0, 4, 0, 8, 0, 7, 0, 5],
-                     [6, 0, 0, 1, 0, 7, 0, 0, 3]];
-            break;
-        case 3:
-            board = [[6, 0, 9, 0, 0, 4, 0, 0, 1],
-                     [8, 0, 0, 0, 5, 0, 0, 0, 0],
-                     [0, 3, 5, 1, 0, 9, 0, 0, 8],
-                     [0, 0, 8, 0, 0, 0, 0, 0, 4],
-                     [0, 5, 0, 0, 0, 0, 0, 3, 0],
-                     [4, 0, 0, 0, 7, 0, 0, 5, 2],
-                     [0, 0, 0, 0, 0, 1, 0, 0, 0],
-                     [0, 0, 1, 0, 4, 0, 0, 0, 0],
-                     [7, 6, 0, 0, 3, 0, 0, 0, 0]];
-            break;
-        case 4:
-            board = [[1, 0, 0, 0, 0, 9, 0, 0, 0],
-                     [5, 6, 0, 0, 1, 7, 0, 3, 9],
-                     [0, 0, 8, 6, 0, 0, 1, 0, 4],
-                     [6, 0, 9, 0, 0, 0, 0, 0, 0],
-                     [3, 8, 0, 0, 2, 0, 0, 7, 6],
-                     [0, 0, 0, 0, 0, 0, 2, 0, 8],
-                     [4, 0, 5, 0, 0, 1, 6, 0, 0],
-                     [2, 1, 0, 8, 5, 0, 0, 4, 3],
-                     [0, 0, 0, 3, 0, 0, 0, 0, 1]];
-            break;
-        case 5:
-            board = [[1, 0, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                     [0, 0, 0, 0, 0, 0, 0, 0, 0]];
-            break;
-    }
 }
 
 function setup() 
@@ -205,55 +229,54 @@ function setup()
     var canvas = createCanvas(canvasSize, canvasSize);
     canvas.parent("display-canvas");
 
-    mySelect = createSelect();
-    mySelect.parent("button-container");
-    mySelect.option('Puzzle #1');
-    mySelect.option('Puzzle #2');
-    mySelect.option('Puzzle #3');
-    mySelect.option('Puzzle #4');
-    mySelect.option('Puzzle #5');
-    mySelect.changed(selectPuzzle);
-
-    myStart = createButton("Start");
-    myStart.parent("button-container");
-    myStart.mousePressed(() => begin = true );
-
     textSize(40);
     textAlign(CENTER, CENTER);
+    textFont('monospace');
 
-    for (let row = 0; row < boardLength; row++)
-        for (let col = 0; col < boardLength; col++)
-            drawSquare(row, col);
+    // Drop-down for selecting puzzle
+    puzzleSelect = createSelect();
+    puzzleSelect.parent("button-container");
+
+    // 1, 2, ..., num boards - 1
+    options = [...Array(boards.length).keys()];
+    // Construct the drop-down
+    options.map(x => puzzleSelect.option(`Puzzle #${x+1}`));
+
+    // Start button for starting the solve
+    startSolve = createButton("Start");
+    startSolve.parent("button-container");
+
+    // Process drop-down change
+    puzzleSelect.changed(() => {
+        if (amSolving) return;
+        let n = parseInt(puzzleSelect.value().replace(/\D/g, ""));
+        board = boards[n-1];
+    });
+
+    // Process start button pressed
+    startSolve.mousePressed(() => {
+        if (amSolving) return;
+        startSolving = true;
+    });
 }
 
 function draw() 
 {
     getColors();
 
-    background(fgColor);
-
-    // Toggle start 
-    if (begin) 
+    if (startSolving) 
     {
-        solve(0, 0);
-        begin = false;
-        solving = true;
+        solve(0, 0).then(() => isSolved = true);
+        puzzleSelect.disable();
+        startSolving = false;
+        amSolving = true;
     }
 
-    // Draw board repeatedly
-    for (let row = 0; row < boardLength; row++)
-        for (let col = 0; col < boardLength; col++)
-            drawSquare(row, col);
-
-    // Draws subgrid lines.
-    strokeWeight(4);
-
-    stroke(fgColor);
-    for (let i = 1; i <= 2; i++) 
+    if (isSolved)
     {
-        line(squareSize * 3 * i, 0, squareSize * 3 * i, canvasSize);
-        line(0, squareSize * 3 * i, canvasSize, squareSize * 3 * i);
+        puzzleSelect.removeAttribute('disabled');
+        amSolving = isSolved = false;
     }
 
-    strokeWeight(1);
+    drawBoard();
 }

@@ -1,229 +1,184 @@
-// Alexander Peterson
-// May 19, 2021
-// Implementation of "Boids" in P5.js 
 
-// Heavily inspired from the algorithm created by Craig Reynolds
-// as described by Conrad Parker in his blog:
-// http://www.kfish.org/~conrad/boids/pseudocode.html
+const CANVAS_SIZE = 700;
+const SPEED_LIMIT = 3;
+const BIRD_RADIUS = 5;
+const FLOCK_SIZE = 100;
 
-var canvasSize = 700;
-var flockSize = 250;
-var flock = [];
+const LOCAL_DIST = 25;
+const RULE_1_TUNING = 5;
+const RULE_2_TUNING = 50;
+const RULE_2_DIST = 1;
+const RULE_3_TUNING = 20;
+const RULE_4_TUNING = 1/10;
 
-// Rule Parameters
-// [Range, Dividing Factor]
-var parameters = [[30, 500], [2, 180], [8, 310], [0, 1000]];
+let rules = [rule1, rule2, rule3, rule4];
+let flock = [];
 
-var speedLimit = 9;
+let bgColor;
+let fgColor;
 
-var numSquares = 100;
-var squareLength = canvasSize / numSquares;
-
-// Builds a 2D array with empty entries.
-var spatialGrid = [...Array(numSquares)].map(e => Array(numSquares));
-for (let i = 0; i < numSquares; i++)
-    for (let j = 0; j < numSquares; j++)
-        spatialGrid[i][j] = []
-
-function getGridCell(x, y)
+function getColors()
 {
-    return [Math.floor(y / squareLength), Math.floor(x / squareLength)];
-}
+    var docGetter = getComputedStyle(document.documentElement);
 
-function removeBird(grid, object)
-{
-    let [row, col] = getGridCell(object.r.x, object.r.y);
-    let list = grid[row][col];
-    
-    let index = list.indexOf(object);
-
-    if (index > -1)
-        list.splice(index, 1);
-}
-
-function addBird(grid, object)
-{
-    let [row, col] = getGridCell(object.r.x, object.r.y);
-    grid[row][col].push(object);
-}
-
-function getNeighbors(grid, row, col, radius)
-{
-    let result = []; 
-
-    for (let i = row - radius; i <= row + radius; i++)
-    {
-        for (let j = col - radius; j <= col + radius; j++)
-        {
-            if (i < 0 || i >= numSquares || j < 0 || j >= numSquares)
-                continue;
-
-            result.push(...grid[i][j]);
-        }
-    }
-
-    return result;
+    bgColor = docGetter.getPropertyValue('--bg-color');
+    fgColor = docGetter.getPropertyValue('--text-color');
 }
 
 class Bird
 {
     constructor()
     {
-        // Position and velocity
-        this.r = createVector(random(0, canvasSize), random(0, canvasSize));
-
-        let [row, col] = getGridCell(this.r.x, this.r.y);
-        spatialGrid[row][col].push(this);
-
-        this.v = createVector(0, 0);
+        this.pos = createVector(random(0, CANVAS_SIZE), random(0, CANVAS_SIZE));
+        this.vel = createVector(random(-10, 10), random(-10, 10));
+        this.acc = createVector(0, 0);
     }
 
-    // Teleport bird to opposite side if reached a border
+    limitSpeed()
+    {
+        if (this.vel.mag() > SPEED_LIMIT)
+            this.vel.setMag(SPEED_LIMIT);
+    }
+
     bound()
     {
-        // Along right or left border
-        if (this.r.x < 0)
-            this.r.x = canvasSize - 1;
+        if (this.pos.x < 0)
+            this.pos.x = CANVAS_SIZE - 1;
 
-        else if (this.r.x > canvasSize)
-            this.r.x = 0;
+        else if (this.pos.x > CANVAS_SIZE)
+            this.pos.x = 0;
 
-        // Along top or bottom border
-        if (this.r.y <= 0)
-            this.r.y = canvasSize - 1;
+        if (this.pos.y <= 0)
+            this.pos.y = CANVAS_SIZE - 1;
 
-        else if (this.r.y > canvasSize)
-            this.r.y = 0;
+        else if (this.pos.y > CANVAS_SIZE)
+            this.pos.y = 0;
+    }
+
+    draw()
+    {
+        fill(color(fgColor));
+        circle(this.pos.x, this.pos.y, BIRD_RADIUS);
     }
 
     update()
     {
-        // Add vectors from each rule to the velocity vector of this bird
-        this.v.add(rule1(this));
-        this.v.add(rule2(this));
-        this.v.add(rule3(this));
-        this.v.add(rule4(this));
+        rules.map(rule => rule(this));
+        this.pos.add(this.vel);
+        this.vel.add(this.acc);
 
-        // Limit speed
-        if (this.v.mag() > speedLimit)
-            this.v.setMag(speedLimit);
-
-        // Remove from grid, update position
-        removeBird(spatialGrid, this);
-        this.r.add(this.v);
-
-        // If out of bounds, teleport back
+        this.limitSpeed();
         this.bound();
-
-        // Put the bird back onto the grid and draw.
-        addBird(spatialGrid, this);
-
-        fill(255, 255, 255, 150);
-        circle(this.r.x, this.r.y, 5);
+        this.draw();
     }
 }
 
-// Steer towards perceived center of mass
-function rule1(b)
+// Dog-leg hypotenuse approximation for hypotenuse of a triangle given the two sides a and b.
+// https://forums.parallax.com/discussion/147522/dog-leg-hypotenuse-approximation
+function hypot(a, b)
 {
-    let v = createVector(0, 0);
+    a = abs(a);
+    b = abs(b);
+    lo = min(a, b);
+    hi = max(a, b);
 
-    let [row, col] = getGridCell(b.r.x, b.r.y);
-    let neighbors = getNeighbors(spatialGrid, row, col, parameters[0][0]);
+    return hi + 3 * lo / 32 + max(0, 2 * lo - hi) / 8 + max(0, 4 * lo - hi) / 16;
+}
 
-    if (neighbors.length == 0)
-        return v; 
+// Cohesion
+function rule1(boid)
+{
+    let centerOfMass = createVector(0, 0);
+    let nearbyCount = 0;
 
-    // Sum positions of close birds
-    for (let i = 0; i < neighbors.length; i++)
-        v.add(neighbors[i].r);
+    flock.forEach(other => {
+        if (other == boid) return;
+
+        let ab = p5.Vector.sub(other.pos, boid.pos);
+        if (hypot(ab.x, ab.y) < LOCAL_DIST)
+        {
+            centerOfMass.add(other.pos)
+            nearbyCount++;
+        }
+    });
+
+    if (nearbyCount == 0)
+        return createVector(0, 0);
     
-    // Find average velocity of flock 
-    v.div(neighbors.length);
+    let force = centerOfMass.sub(boid.pos).div(RULE_1_TUNING);
 
-    // Subtract from current position to get vector pointing to average location
-    v.sub(b.r);
-
-    // Divide by factor (this smooths the transition to new position)
-    v.div(parameters[0][1]);
-
-    return v;
+    boid.acc.add(force);
 }
 
-// Birds try to avoid each other
-function rule2(b)
+// Separation
+function rule2(boid)
 {
-    let c = createVector(0, 0);
+    let result = createVector(0, 0);
 
-    let [x, y] = getGridCell(b.r.x, b.r.y);
-    let neighbors = getNeighbors(spatialGrid, x, y, parameters[1][0]);
+    flock.forEach(other => {
+        if (other == boid) return;
 
-    for (let i = 0; i < neighbors.length; i++)
-        c = c.sub(p5.Vector.sub(neighbors[i].r, b.r));
+        let ab = p5.Vector.sub(other.pos, boid.pos);
+        if (hypot(ab.x, ab.y) < RULE_2_DIST)
+            result = result.sub(ab);
+    });
 
-    // Divide by a factor to smooth velocity transition.
-    c.div(parameters[1][1]);
+    let force = result.div(RULE_2_TUNING);
 
-    return c;
+    boid.acc.add(force);
 }
 
-// Birds match nearby velocities
-function rule3(b)
-{
-    let v = createVector(0, 0);
+// Alignment
+function rule3(boid) {
+    let avgVelocity = createVector(0, 0);
+    let nearbyCount = 0;
 
-    // Get neighboring birds
-    let [x, y] = getGridCell(b.r.x, b.r.y);
-    let neighbors = getNeighbors(spatialGrid, x, y, parameters[2][0]);
+    flock.forEach(other => {
+        if (other == boid) return;
 
-    // If no neighbors, return the zero vector.
-    if (neighbors.length == 0)
-        return v;
+        let ab = p5.Vector.sub(other.pos, boid.pos);
+        if (hypot(ab.x, ab.y) < LOCAL_DIST)
+        {
+            avgVelocity.add(other.vel);
+            nearbyCount++;
+        }
+    });
 
-    // Get the average velocity of the neighboring birds.
-    for (let i = 0; i < neighbors.length; i++)
-        v.add(neighbors[i].v);
+    if (nearbyCount == 0)
+        return createVector(0, 0);
 
-    v.div(neighbors.length);
+    avgVelocity.div(nearbyCount);
+    let force = (avgVelocity.sub(boid.vel)).div(RULE_3_TUNING);
 
-    v.sub(b.v);
-
-    // Divide by a factor to smooth velocity transition.
-    v.div(parameters[2][1]);
-
-    return v;
+    boid.acc.add(force);
 }
 
-// Steer towards mouse position
-function rule4(b)
+// Goal-seeking
+function rule4(boid)
 {
-    // Get mouse position as p5 vector.
-    let m = createVector(mouseX, mouseY);
+    let mousePos = createVector(mouseX, mouseY);
+    let mousePosToBoid = p5.Vector.sub(mousePos, boid.pos);
+    let force = mousePosToBoid.div(RULE_4_TUNING);
 
-    // Vector from mouse to bird position.
-    let v = p5.Vector.sub(m, b.r);
-
-    // Divide by a factor to smooth velocity transition.
-    v.div(parameters[3][1]);
-
-    return v;
+    boid.acc.add(force);
 }
 
 function setup()
 {
-    var canvas = createCanvas(canvasSize, canvasSize);
+    var canvas = createCanvas(CANVAS_SIZE, CANVAS_SIZE);
     canvas.parent("display-canvas");
 
-    for (let i = 0; i < flockSize; i++)
-        flock.push(new Bird());
+    [...Array(FLOCK_SIZE)].map(() => flock.push(new Bird()));
 
     frameRate(60);
-    fill(color('#BBBBBB'));
-    noStroke();
+    getColors();
+    fill(color(fgColor));
+    noStroke(); 
 }
 
 function draw()
 {
-    background(color('#131313'));
-    flock.forEach(bird => bird.update());
+    getColors();
+    background(color(bgColor));
+    flock.forEach(bird => bird.update())
 }

@@ -18,6 +18,7 @@ const wallColor = 'black';
 var colorChanged = false;
 
 var finished = false;
+var resetting = false;
 
 class Node 
 {
@@ -28,7 +29,6 @@ class Node
 
         this.fScore = 0;
         this.gScore = Infinity;
-
         this.wall = false;
         this.visited = false;
         this.searched = false;
@@ -42,8 +42,6 @@ class Node
     }
 }
 
-// We don't need the *actual* euclidean distance between two nodes as long as 
-// the comparisons are equivalent. This saves plenty of sqrt() calculations!
 function distance(nodeA, nodeB) 
 {
     return (nodeB.x - nodeA.x) ** 2 + (nodeB.y - nodeA.y) ** 2;
@@ -55,7 +53,6 @@ function inBounds(x, y)
     return (x >= 0 && x < numNodes) && (y >= 0 && y < numNodes);
 }
 
-// Used to create delay in asynchronous functions, or namely just aStar().
 function sleep(ms) 
 {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -67,7 +64,7 @@ function findNeighbors(node)
     let x = node.x, y = node.y, neighbors = [];
 
     // Add up/down, left/right neighbors.
-    // We exclude the already visited nodes as well as any walls.
+    // We exclude the already visited nodes and the walls.
     for (let i = -1; i <= 1; i += 2) 
     {
         if (inBounds(x, y+i) && !nodes[x][y+i].visited && !nodes[x][y+i].wall)
@@ -80,8 +77,7 @@ function findNeighbors(node)
     return neighbors;
 }
 
-// See https://en.wikipedia.org/wiki/A*_search_algorithm#Description for a
-// detailed explanation.
+// See https://en.wikipedia.org/wiki/A*_search_algorithm#Description for a detailed explanation.
 async function aStar(startNode, endNode) 
 {
     let openSet = [startNode];
@@ -91,6 +87,9 @@ async function aStar(startNode, endNode)
 
     while (openSet.length > 0) 
     {
+        if (resetting)
+            return;
+
         openSet.sort((a, b) => (a.fScore - b.fScore));
 
         let current = openSet[0];
@@ -150,7 +149,6 @@ function placeEnd()
 {
     let [x, y] = getMouseCellXY();
 
-    // Only place the end node if it's not in the same location as the start node.
     if (inBounds(x, y) && nodes[x][y] != startNode) 
     {
         endNode = nodes[x][y];
@@ -178,14 +176,17 @@ function placeWall()
 // Calls A* once both start and end nodes are placed.
 function start() 
 {
+    if (resetting) resetting = false;
+
     if (startPlaced && endPlaced)
         aStar(startNode, endNode);
 }
 
 // Resets all nodes and walls.
-function reset() 
+async function reset() 
 {
-
+    resetting = true;
+    await sleep(50);
     background(color(bgColor));
 
     for (let i = 0; i < numNodes; i++) 
