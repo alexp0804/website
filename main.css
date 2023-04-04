@@ -118,10 +118,13 @@ body {
 }
 #body-content a {
     display: inline-block;
+    color: inherit;
 }
 #body-content img {
+    max-width: 900px;
     height: auto;
-    max-width: 350px;
+    display: flex;
+    object-fit: contain;
 }
 #projects, #about-me, #contact-me {
     margin-top: 50px;
@@ -188,7 +191,11 @@ hr {
 
 #images {
     display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
     flex-wrap: wrap;
+    max-width: 100%;
 }
 
 #display-canvas {
@@ -199,7 +206,6 @@ hr {
 
 canvas {
     width: 700;
-    /* width: 90% !important; */
     height: 90% !important;
     border: 2px solid;
     border-color: var(--header-color);

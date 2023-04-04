@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>alexander</title>
+    <link rel="stylesheet" href="../main.css">
+</head>
+
+<body>
+    <div id="head-container">
+        <div id="head-content">
+
+            <a href="../index.html">
+                <span id="my-name">
+                    <p> $ alexp </p>
+                </span>
+            </a>
+
+            <span id="links">
+                <a href="https://github.com/alexp0804/">My GitHub</a>
+            </span>
+        </div>
+    </div>
+
+    <div id="body-container">
+        <div id="body-content">
+            <h>Neural Network from Scratch</h>
+            <div class="project-page-description">
+                <p>Inspired by <a href="https://sausheong.github.io/posts/how-to-build-a-simple-artificial-neural-network-with-go/">
+                    this blog post</a> I decided to implement my own neural network from scratch in
+                    C.
+                    
+                <p>I was motivated to better understand how neural networks operate. If you can write it in C, you can probably understand it!</p>
+                </p>
+
+                <hr>
+
+                <p>
+                    My goal was to classify the MNIST dataset with decent accuracy.
+                </p>
+
+                <p>
+                    My model consists of a single hidden layer, fully connected to both input and
+                    output layers.
+
+                    The hidden and output layers are activated with the sigmoid activation function
+                    and the output of the model is passed through the softmax function to compute
+                    the probability of each label.
+                </p>
+                <p>
+                    I trained the model on 30,000 training samples. With that I was able to obtain an accuracy score of over 90%!
+
+                </p>
+
+                <p>
+                    The source code can be found on my GitHub <a href="https://github.com/alexp0804/neural-network-in-c"><u>here</u></a>.
+                </p>
+            </div>
+            <hr>
+            <div id="images">
+                <div style="display: flex; flex-direction: column;">
+                    <img src="../images/MnistExamples.png">
+                    <p style="margin: auto; margin-bottom: 30px;">A few samples from the MNIST dataset.</p>
+                </div>
+
+                <div style="display:flex; flex-direction: column;">
+                    <img src="../images/neural-network-accuracy.png">
+                    <p style="margin: auto; margin-top: 20px;margin-bottom: 30px;">A screenshot showing the results of my training and testing.</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
