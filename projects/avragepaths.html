@@ -23,44 +23,58 @@
     </div>
 
     <div id="body-container">
-        <div id="body-content">
-            <h>aVRage Paths</h>
-            <div class="project-page-description">
-                <p>
-                    aVRage Paths was conceived to solve a key problem in VR locomotion research, the inability to have uniform yet random environments.
-                </p>
-                <p>
-                    Researchers often want to test how users interact with locomotion methods (i.e., teleportation, arm swinging) in a randomized environment such as a maze to better isolate the effects of the locomotion method.
+            <div id="body-content">
+                <h>aVRage Paths</h>
+                <div class="project-page-description">
+                    <p>
+                        aVRage Paths was developed to address a key challenge in VR locomotion research:
+                        the difficulty of creating environments that are both consistent and random.
+                    </p>
+                    <p>
+                        To study different locomotion methods (e.g., teleportation, arm swinging),
+                        researchers want to better isolate the effects of the locomotion method by
+                        placing participants in randomized environments.
+                    </p>
+                    <p>
+                        The go-to for this has always been randomly generated mazes - but with
+                        that random generation can lead to variance across participants. One subject
+                        may get a fairly easy maze while another gets a complicated maze by pure unluckiness.
+                        This makes it hard to isolate the locomotion method as a result.
+                    </p>
+                    <hr>
+                    <p>
+                        Our solution to this problem was to generate the maze around the player "on the fly."
+                        The path that a participant takes is defined by the researcher prior to the
+                        participant starting the maze, and no matter which way the participant goes,
+                        the path remains the same.
 
-                </p>
-                <p>
-                    With environments like mazes the inherit randomness in the maze aids in preventing a participant from learning the environment, but it also means that some participants get handed unfairly long or complex mazes. This makes it hard to isolate the locomotion method as the sole variable effecting performance in the maze, making it harder to study.
-                </p>
-                <hr>
-                <p>
-                    Our solution to this problem was to generate the maze around the player "on the fly." The path that a participant takes is defined by the researcher prior to the participant starting the maze, and no matter which way the participant goes, the path remains the same.
+                    </p>
+                    <p>
+                        This approach introduces a unique concept we call "impossible spaces."
+                        The maze may have paths that overlap physically, but not logically.
+                        I can take four right turns and physically end up where I started,
+                        but to get back to the start of my path, I would have to undo those four turns.
+                    </p>
 
-                </p><p>
-                    This has a unique effect of causing what we call "impossible spaces." The maze may have paths that overlap physically, but not logically. I can take four right turns and physically end up where I started, but to get back to the start of my path, I would have to undo those four turns.
-                </p>
+                    <hr>
+                    <p>
+                        Below is an example of what maze traversal could look like from a top-down perspective.
+                    </p>
+                    <div id="images">
+                        <img src="../images/traversal.gif" style="width: 100%">
+                    </div>
+
+                    <p>
+                        My role focused on implementing the locomotion systems, and the system that allows
+                        researchers to swap in their own locomotion system that they want to study.
+                        I also aided in creating textures and prefabs throughout the project.
+                    </p>
+                    <hr>
+                    <p>
+                        The source code for the project can be found <a href="https://github.com/avrage-paths/avrage-paths.github.io">here</a>.
+                    </p>
+                </div>
             </div>
-            <hr>
-            <p>
-                Below is an example of what maze traversal could look like from a top-down perspective.
-            </p>
-            <div id="images">
-                <img src="../images/traversal.gif" style="width: 100%">
-            </div>
-            <p>
-                My role on the team involved building out the systems involved in controlling player movements. I worked extensively with SteamVR's API to create a system that allowed researchers two swap between locomotion systems with ease. I also aided in creating textures and prefabs throughout the project.
-            </p>
-            <hr>
-            <p>
-                The entire project can be found <a href="https://github.com/avrage-paths/avrage-paths.github.io">here</a>.
-            </p>
         </div>
-    </div>
-
-</body>
-
+    </body>
 </html>
